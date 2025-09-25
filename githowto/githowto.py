@@ -1,4 +1,4 @@
-print("hello")
+
 """
 PS C:\Users\Madina Zheleu> git config --global user.name "YERGAZY"
 PS C:\Users\Madina Zheleu> git config --global user.email "ergazyjeleu@gmail.com"
