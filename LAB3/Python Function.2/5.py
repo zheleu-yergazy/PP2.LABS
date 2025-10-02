@@ -1,6 +1,3 @@
-def category(movies, category):
-    return[movie for movie in movies if movie["category"].lower()==category.lower()]
-
 movies = [
     {"name": "Usual Suspects", "imdb": 7.0, "category": "Thriller"},
     {"name": "Hitman", "imdb": 6.3, "category": "Action"},
@@ -19,14 +16,19 @@ movies = [
     {"name": "We Two", "imdb": 7.2, "category": "Romance"}
 ]
 
-user_category=input("Введите жанр: ")
+def avg_imdb_by_ctg(movies, category):
+    ratings = []
+    for m in movies:
+        if m["category"].lower() == category.lower():
+            ratings.append(m["imdb"])
+    if ratings:
+        return round(sum(ratings) / len(ratings), 2)
+    return None
 
-result=category(movies,user_category)
+category = input("Введите категорию: ")
+result = avg_imdb_by_ctg(movies, category)
 
 if result:
-    print(f"\nФильмы в категории '{user_category}':")
-     
-    for movie in result:
-        print(f"Название: {movie['name']} | Рейтинг: {movie['imdb']} | Жанр: {movie['category']}")
+    print("Средний рейтинг:", result)
 else:
-        print(f"Фильмов в категории '{user_category}' не найдено.")
+    print("Такой категории нет")

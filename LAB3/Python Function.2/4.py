@@ -1,5 +1,8 @@
-def category(movies, category):
-    return[movie for movie in movies if movie["category"].lower()==category.lower()]
+def average_imdb(movies):
+    total = 0
+    for movie in movies:
+        total += movie["imdb"]
+    return total / len(movies)
 
 movies = [
     {"name": "Usual Suspects", "imdb": 7.0, "category": "Thriller"},
@@ -19,14 +22,5 @@ movies = [
     {"name": "We Two", "imdb": 7.2, "category": "Romance"}
 ]
 
-user_category=input("Введите жанр: ")
 
-result=category(movies,user_category)
-
-if result:
-    print(f"\nФильмы в категории '{user_category}':")
-     
-    for movie in result:
-        print(f"Название: {movie['name']} | Рейтинг: {movie['imdb']} | Жанр: {movie['category']}")
-else:
-        print(f"Фильмов в категории '{user_category}' не найдено.")
+print("Средний рейтинг IMDB:", round(average_imdb(movies),2))
