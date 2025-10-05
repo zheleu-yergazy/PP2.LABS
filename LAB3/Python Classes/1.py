@@ -3,7 +3,7 @@ class MyString:
         self.s = ""        
 
     def getString(self):
-        self.s = input("Введите строку: ")
+        self.s = input("Enter the string: ")
 
     def printString(self):
         print(self.s.upper())
@@ -11,5 +11,5 @@ class MyString:
 
 
 obj = MyString()     
-obj.getString()      
+obj.getString()
 obj.printString()    

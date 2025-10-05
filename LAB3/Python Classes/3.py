@@ -12,4 +12,4 @@ class Rectangle(Shape):
         return self.length * self.width
 
 rect = Rectangle(5, 3)
-print("Площадь прямоугольника:", rect.area())  
+print("Area of ​​a rectangle:", rect.area())  
