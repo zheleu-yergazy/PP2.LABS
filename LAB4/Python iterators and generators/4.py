@@ -5,5 +5,7 @@ def squares(A,B):
 A = int(input("Enter a: "))
 B = int(input("Enter b: "))
 
-for i in squares(A,B):
-    print(i)
+
+
+str = [str(i) for i in squares(A,B)]
+print(",".join(str) + ".")
