@@ -6,4 +6,4 @@ def div_by_2(N):
 N = int(input())
 
 str = [str(i) for i in div_by_2(N)]
-print(",".join(str) + ".")
+print(", ".join(str) + ".")
