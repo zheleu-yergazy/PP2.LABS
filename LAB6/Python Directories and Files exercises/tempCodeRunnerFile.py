@@ -1,0 +1,1 @@
+C:\Users\Madina Zheleu\OneDrive\Рабочий стол\lab\LAB1\LAB6\Python Directories and Files exercises\sample.txt
