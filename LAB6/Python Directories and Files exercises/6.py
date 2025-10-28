@@ -14,4 +14,4 @@ for letter in string.ascii_uppercase:
     
     print(f"Создан файл: {filepath}")
 
-print("\n✅ Все файлы успешно созданы в папке:", folder_name)
+print("\nВсе файлы успешно созданы в папке:", folder_name)
