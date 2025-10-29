@@ -46,7 +46,7 @@ def text(txt, pos):
     screen.blit(img, pos)
 
 
-def draw_ui(status):
+def drawui(status):
     screen.fill(BG)
     text("MEME-MUSIC", (200, 30))
     text(f"Трек: {os.path.basename(playlist[current])}", (50, 80))
@@ -66,7 +66,7 @@ status = "Играет"
 running = True
 
 while running:
-    draw_ui(status)
+    drawui(status)
 
     for e in pygame.event.get():
         if e.type == pygame.QUIT:
@@ -129,5 +129,8 @@ while running:
             elif e.key == pygame.K_s:
                 mixer.music.stop()
                 status = "Остановлено"
+            elif e.key == pygame.K_m:
+                play_music()
+                status = "Играет"
 
 pygame.quit()
