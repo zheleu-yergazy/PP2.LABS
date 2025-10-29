@@ -2,7 +2,7 @@ import pygame
 import sys
 from pygame import mixer
 
-pygame.init()
+pygame.init()   
 mixer.init()
 
 WIDTH, HEIGHT = 600, 400
@@ -28,7 +28,6 @@ while run:
     for e in pygame.event.get():
         if e.type == pygame.QUIT:
             run = False
-            sys.exit()
         
         if e.type == pygame.KEYDOWN:
             if e.key in (pygame.K_LEFT, pygame.K_RIGHT, pygame.K_UP, pygame.K_DOWN):
@@ -73,3 +72,4 @@ while run:
     clock.tick(60)
 
 pygame.quit()
+sys.exit()

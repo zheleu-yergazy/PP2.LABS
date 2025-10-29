@@ -8,21 +8,21 @@ sound = pygame.mixer.Sound('tictac.mp3')
 sound.set_volume(0.5)
 sound.play(-1)
 
-screen = pygame.display.set_mode((640, 500))
+screen = pygame.display.set_mode((800, 600))
 pygame.display.set_caption("Mickey Clock")
 clock = pygame.time.Clock()
 
 
-clock_img = pygame.image.load("mickey.png")
-clock_img = pygame.transform.scale(clock_img, (650, 500))
+clock_img = pygame.image.load("base_micky.jpg")
+clock_img = pygame.transform.scale(clock_img, (800, 600))
 
 min_img = pygame.image.load("c.png")
-min_img = pygame.transform.scale(min_img, (40, 110))
+min_img = pygame.transform.scale(min_img, (55, 135))
 
 sec_img = pygame.image.load("c1.png")
-sec_img = pygame.transform.scale(sec_img, (60, 110))
+sec_img = pygame.transform.scale(sec_img, (65, 135))
 
-CENTER = (325, 252)
+CENTER = (400, 300)
 FPS = 1
 COLOR = (180, 20, 20)
 
@@ -49,10 +49,11 @@ while run:
     drawrotated(screen, min_img, CENTER, (min_img.get_width()/2, min_img.get_height()), -minute * 6)
     drawrotated(screen, sec_img, CENTER, (sec_img.get_width()/2, sec_img.get_height()), -second * 6)
 
-    pygame.draw.circle(screen, COLOR, CENTER, 10)
+    pygame.draw.circle(screen, COLOR, CENTER, 13)
 
     pygame.display.flip()
     clock.tick(FPS)
 
 pygame.quit()
 sys.exit()
+
