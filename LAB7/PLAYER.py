@@ -28,10 +28,10 @@ TXT = (255, 220, 255)
 
 
 buttons = {
-    "play": pygame.Rect(100, 200, 80, 40),
-    "stop": pygame.Rect(200, 200, 80, 40),
-    "prev": pygame.Rect(300, 200, 80, 40),
-    "next": pygame.Rect(400, 200, 80, 40)
+    "play": pygame.Rect(100, 220, 80, 40),
+    "stop": pygame.Rect(200, 220, 80, 40),
+    "prev": pygame.Rect(300, 220, 80, 40),
+    "next": pygame.Rect(400, 220, 80, 40)
 }
 
 

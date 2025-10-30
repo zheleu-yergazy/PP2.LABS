@@ -23,15 +23,39 @@ sec_img = pygame.image.load("c1.png")
 sec_img = pygame.transform.scale(sec_img, (65, 135))
 
 CENTER = (400, 300)
-FPS = 1
 COLOR = (180, 20, 20)
 
-def drawrotated(surf, image, center, pivot, angle):
+def drawrot(surf, image, center, pivot, angle):
+    """
+    surf    - поверхность (screen)
+    image   - исходное изображение стрелки
+    center  - координаты точки на экране, вокруг которой вращаем (например, CENTER)
+    pivot   - точка в локальных координатах image, вокруг которой хотим вращать (tuple: (px, py))
+              например (image.get_width()/2, image.get_height()) — нижний центр изображения
+    angle   - угол в градусах (pygame.transform.rotate поворачивает против часовой стрелки для положительных углов)
+    """
+    # Поворачиваем изображение
     rotated = pygame.transform.rotate(image, angle)
-    offset = pygame.math.Vector2(image.get_rect().center) - pygame.math.Vector2(pivot)
-    offset = offset.rotate(-angle)
-    rect = rotated.get_rect(center=pygame.math.Vector2(center) + offset)
+
+    # Истинный центр (np) исходного изображения в локальных координатах
+    image_center = pygame.math.Vector2(image.get_rect().center)
+    pivot = pygame.math.Vector2(pivot)
+
+    # Вектор от локального центра изображения до pivot (в локальной системе)
+    offset = image_center - pivot
+
+    # Поворачиваем этот вектор вместе с изображением (обратите внимание на знак)
+    rotated_offset = offset.rotate(-angle)
+
+    # Позиция центра повернутого изображения: это нужный экранный центр + смещённый повёрнутый вектор
+    rotated_center = pygame.math.Vector2(center) + rotated_offset
+
+    # Получаем rect повернутого изображения и ставим его так, чтобы его центр был в rotated_center
+    rect = rotated.get_rect(center=(round(rotated_center.x), round(rotated_center.y)))
+
+    # Рисуем
     surf.blit(rotated, rect)
+
 
 run = True
 while run:
@@ -46,13 +70,13 @@ while run:
     screen.fill((0, 0, 0))
     screen.blit(clock_img, (0, 0))
 
-    drawrotated(screen, min_img, CENTER, (min_img.get_width()/2, min_img.get_height()), -minute * 6)
-    drawrotated(screen, sec_img, CENTER, (sec_img.get_width()/2, sec_img.get_height()), -second * 6)
+    drawrot(screen, min_img, CENTER, (min_img.get_width() / 2, min_img.get_height()), minute)
+    drawrot(screen, sec_img, CENTER, (sec_img.get_width() / 2, sec_img.get_height()), second)
 
     pygame.draw.circle(screen, COLOR, CENTER, 13)
 
     pygame.display.flip()
-    clock.tick(FPS)
+    clock.tick(60)
 
 pygame.quit()
 sys.exit()
