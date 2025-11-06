@@ -1,12 +1,10 @@
 import pygame
-import sys
 from pygame import mixer
 
 pygame.init()   
 mixer.init()
 
-WIDTH, HEIGHT = 600, 400
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
+screen = pygame.display.set_mode((600, 400))
 pygame.display.set_caption("Мы в универе")
 
 speed = 10
@@ -23,11 +21,11 @@ sound2 = pygame.mixer.Sound('border.mp3')
 sound.set_volume(0.5)   
 sound2.set_volume(0.08)  
 
-run = True
-while run:
+while True:
     for e in pygame.event.get():
         if e.type == pygame.QUIT:
-            run = False
+            pygame.quit()
+            exit()
         
         if e.type == pygame.KEYDOWN:
             if e.key in (pygame.K_LEFT, pygame.K_RIGHT, pygame.K_UP, pygame.K_DOWN):
@@ -49,14 +47,14 @@ while run:
     if x - radius <= 0:
         x = radius
         touch = True
-    if x + radius >= WIDTH:
-        x = WIDTH - radius
+    if x + radius >= 600:
+        x = 600 - radius
         touch = True
     if y - radius <= 0:
         y = radius
         touch = True
-    if y + radius >= HEIGHT:
-        y = HEIGHT - radius
+    if y + radius >= 400:
+        y = 400 - radius
         touch = True
 
    
@@ -71,5 +69,3 @@ while run:
     pygame.display.flip()
     clock.tick(60)
 
-pygame.quit()
-sys.exit()

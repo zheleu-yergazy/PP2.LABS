@@ -3,37 +3,23 @@ import pygame
 from pygame import mixer
 
 pygame.init()
-mixer.init()
-
 screen = pygame.display.set_mode((580, 300))
 pygame.display.set_caption("My Music Player")
 font = pygame.font.SysFont("Arial", 26, bold=True)
-
-
 music_folder = "mus_folder"
-playlist = [os.path.join(music_folder, f) for f in os.listdir(music_folder) if f.endswith(".mp3")]
-
+playlist = [os.path.join(music_folder, t) for t in os.listdir(music_folder) if t.endswith(".mp3")]
 
 current = 0
 volume = 0.5
 paused = False
 
 mixer.music.set_volume(volume)
+bg = (40, 0, 60)
+btn = (130, 0, 180)
+btn_hov = (200, 0, 250)
+Txt = (255, 220, 255)
 
-
-BG = (40, 0, 60)
-BTN = (130, 0, 180)
-BTN_HOVER = (200, 0, 250)
-TXT = (255, 220, 255)
-
-
-buttons = {
-    "play": pygame.Rect(100, 220, 80, 40),
-    "stop": pygame.Rect(200, 220, 80, 40),
-    "prev": pygame.Rect(300, 220, 80, 40),
-    "next": pygame.Rect(400, 220, 80, 40)
-}
-
+buttons = {"play": pygame.Rect(100, 220, 80, 40),"stop": pygame.Rect(200, 220, 80, 40),"prev": pygame.Rect(300, 220, 80, 40),"next": pygame.Rect(400, 220, 80, 40)}
 
 def play_music():
     global paused
@@ -42,20 +28,19 @@ def play_music():
     paused = False
 
 def text(txt, pos):
-    img = font.render(txt, True, TXT)
+    img = font.render(txt, True, Txt)
     screen.blit(img, pos)
 
-
-def drawui(status):
-    screen.fill(BG)
+def draw(status):
+    screen.fill(bg)
     text("MEME-MUSIC", (200, 30))
     text(f"Трек: {os.path.basename(playlist[current])}", (50, 80))
     text(f"Громкость: {int(volume * 100)}%", (50, 120))
     text(status, (50, 160))
 
     for name, rect in buttons.items():
-        color = BTN_HOVER if rect.collidepoint(pygame.mouse.get_pos()) else BTN
-        pygame.draw.rect(screen, color, rect, border_radius=8)
+        color = btn_hov if rect.collidepoint(pygame.mouse.get_pos()) else btn
+        pygame.draw.rect(screen, color, rect)
         text(name.capitalize(), (rect.x + 10, rect.y + 8))
 
     pygame.display.flip()
@@ -63,14 +48,15 @@ def drawui(status):
 
 play_music()
 status = "Играет"
-running = True
 
-while running:
-    drawui(status)
+
+while True:
+    draw(status)
 
     for e in pygame.event.get():
         if e.type == pygame.QUIT:
-            running = False
+            pygame.quit()
+            exit()
 
         elif e.type == pygame.MOUSEBUTTONDOWN:
             if buttons["play"].collidepoint(e.pos):
@@ -106,7 +92,7 @@ while running:
             elif e.key == pygame.K_UP:
                 volume = min(1.0, volume + 0.1)
                 mixer.music.set_volume(volume)
-            elif e.key == pygame.K_DOWN:
+            elif e.key == pygame.K_DOWN: 
                 volume = max(0.0, volume - 0.1)
                 mixer.music.set_volume(volume)
             elif e.key == pygame.K_RIGHT:
@@ -122,15 +108,14 @@ while running:
                     mixer.music.unpause()
                     paused = False
                     status = "Продолжает"
-                else:
+                elif mixer.music.get_busy():
                     mixer.music.pause()
                     paused = True
                     status = "Пауза"
+                else:
+                    play_music()
+                    status = "Играет"
             elif e.key == pygame.K_s:
                 mixer.music.stop()
                 status = "Остановлено"
-            elif e.key == pygame.K_m:
-                play_music()
-                status = "Играет"
 
-pygame.quit()

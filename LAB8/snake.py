@@ -1,0 +1,405 @@
+import pygame, sys, random
+from pygame.math import Vector2
+
+pygame.init()
+
+cell_n = 15
+cell_s = 32
+offset_x = 34  
+offset_y = 96
+score = 0
+
+screen = pygame.display.set_mode((546,607))
+pygame.display.set_caption('Snake Scenes')
+clock = pygame.time.Clock()
+SCREEN_UPDATE = pygame.USEREVENT
+SCREEN_UPDATE2 = pygame.USEREVENT
+pygame.time.set_timer(SCREEN_UPDATE,170)
+pygame.time.set_timer(SCREEN_UPDATE2,100)
+
+class SOUND:
+    def sounds(self):
+        self.left = pygame.mixer.Sound('snkmove.mp3') 
+        self.down = pygame.mixer.Sound('snkmove2.mp3')
+        self.right = pygame.mixer.Sound('snkmove3.mp3')
+        self.up = pygame.mixer.Sound('snkmove4.mp3')
+        self.eat = pygame.mixer.Sound('snkeat.mp3')
+        self.gmovr = pygame.mixer.Sound('snkgm.mp3')
+    
+class SNAKE1:
+    def __init__(self):
+        self.body = [Vector2(5,10), Vector2(4,10), Vector2(3,10)]
+        self.direction = Vector2(1,0)
+        self.new_block = False
+
+    def draw_snake(self):
+        for block in self.body:
+            x_pos = offset_x + int(block.x * cell_s)
+            y_pos = offset_y + int(block.y * cell_s)
+            block_rect = pygame.Rect(x_pos, y_pos, cell_s, cell_s)
+            pygame.draw.rect(screen, (60, 100, 140), block_rect)
+    
+    def move_snake(self):
+        body_copy = self.body[:]
+        if not self.new_block:
+            body_copy = body_copy[:-1]
+        body_copy.insert(0, body_copy[0] + self.direction)
+        self.body = body_copy
+        self.new_block = False
+
+    def add_block(self):
+        self.new_block = True
+
+class FRUIT1:
+    def __init__(self, snake_body):
+        self.randomize(snake_body)
+
+    def draw_fruit(self):
+        fruit_rect = pygame.Rect(offset_x + int(self.pos.x * cell_s), offset_y + int(self.pos.y * cell_s), cell_s, cell_s)
+        apple = pygame.image.load('apple.png')
+        apple = pygame.transform.smoothscale(apple,(30,30))
+        screen.blit(apple, (fruit_rect))
+        
+    def randomize(self,snake_body):
+         while True:
+            self.x = random.randint(0, cell_n - 1)
+            self.y = random.randint(0, cell_n - 1)
+            self.pos = Vector2(self.x, self.y)
+
+            if self.pos not in snake_body:
+                break
+        
+class MAIN1:
+    def __init__(self):
+        self.snake = SNAKE1()
+        self.fruit = FRUIT1(self.snake.body)
+        self.score = 0 
+        
+    def draw_grass(self):
+        bg = pygame.image.load('bgsnake777.png')
+        bg = pygame.transform.smoothscale(bg,(546,606))
+        screen.blit(bg, (0, 0))
+        
+    def draw_score_level(self):
+        font = pygame.font.SysFont("VERDANA", 28, bold=True)
+        font2 = pygame.font.SysFont("VERDANA", 20, bold=True)
+        score1 = font.render(f"{self.score}", True, (0, 0, 0))
+        level = font2.render("Level: 1", True, (0, 0, 0))
+        screen.blit(score1, (62, 22))
+        screen.blit(level, (435, 22))
+        
+    def draw_elements(self):
+        self.fruit.draw_fruit()
+        self.snake.draw_snake()
+        self.draw_score_level()
+
+    def check_collision(self):
+        if self.fruit.pos == self.snake.body[0]:
+            self.fruit.randomize(self.snake.body)
+            self.snake.add_block()
+            self.score += 1
+            self.eat.play()
+
+    def check_fail(self):
+        head_x = self.snake.body[0].x
+        head_y = self.snake.body[0].y
+
+        if head_x < 0:
+            self.snake.body[0].x = cell_n - 1
+        elif head_x >= cell_n:
+            self.snake.body[0].x = 0
+
+        if head_y < 0:
+            self.snake.body[0].y = cell_n - 1
+        elif head_y >= cell_n:
+            self.snake.body[0].y = 0
+            
+        for block in self.snake.body[1:]:
+            if block == self.snake.body[0]:
+               self.gmovr.play()
+               return self.game_over()
+        
+    def game_over(self):
+        bg = pygame.image.load('snkend.png')
+        bg = pygame.transform.smoothscale(bg,(250,250))
+        overlay = pygame.Surface((1280, 620))  
+        overlay.set_alpha(100)
+        overlay.fill((0, 0, 0))
+        screen.blit(overlay, (0, 0))
+        screen.blit(bg, (150, 210))
+        
+        font1 = pygame.font.SysFont("VERDANA", 30, bold=True)
+        font2 = pygame.font.SysFont("VERDANA", 20)
+        text1 = font1.render("GAME OVER", True, (255, 255, 255))
+        text2 = font2.render(f"Score: {self.score}", True, (255, 255, 255))
+        screen.blit(text1, (175, 240))
+        screen.blit(text2, (227, 280))
+        
+        pygame.display.update()
+
+        while True:
+            for e in pygame.event.get():
+                if e.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if e.type == pygame.KEYDOWN:
+                    if e.key == pygame.K_r:
+                        return "restart"
+                    if e.key == pygame.K_ESCAPE:  
+                        pygame.quit()
+                        sys.exit()
+                        
+    def update(self):
+        self.snake.move_snake()
+        self.check_collision()
+        self.draw_grass()
+        self.draw_elements()
+        result = self.check_fail()
+        return result
+        
+
+class SNAKE2:
+    def __init__(self):
+        self.body = [Vector2(3,10), Vector2(2,10), Vector2(1,10)]
+        self.direction = Vector2(1,0)
+        self.new_block = False
+
+    def draw_snake(self):
+        for block in self.body:
+            x_pos = offset_x + int(block.x * cell_s)
+            y_pos = offset_y + int(block.y * cell_s)
+            block_rect = pygame.Rect(x_pos, y_pos, cell_s, cell_s)
+            pygame.draw.rect(screen, (139, 69, 19), block_rect)
+    
+    def move_snake(self):
+        body_copy = self.body[:]
+        if not self.new_block:
+            body_copy = body_copy[:-1]
+        body_copy.insert(0, body_copy[0] + self.direction)
+        self.body = body_copy
+        self.new_block = False
+
+    def add_block(self):
+        self.new_block = True
+
+class FRUIT2:
+    def __init__(self,snake_body):
+        self.randomize(snake_body)
+
+    def draw_fruit(self):
+        fruit_rect = pygame.Rect(offset_x + int(self.pos.x * cell_s), offset_y + int(self.pos.y * cell_s), cell_s, cell_s)
+        pear = pygame.image.load('pear.png')
+        pear1 = pygame.transform.smoothscale(pear,(25,33))
+        pear2 = pygame.transform.smoothscale(pear,(32,44))
+        screen.blit(pear1,fruit_rect)
+        screen.blit(pear2,(26,12))
+    
+    def randomize(self,snake_body):
+        while True: 
+            self.x = random.randint(0,cell_n - 1)
+            self.y = random.randint(0,cell_n - 1)
+            self.pos = Vector2(self.x,self.y)
+            
+            if self.pos not in snake_body:
+                break
+        
+class MAIN2:
+    def __init__(self):
+        self.snake = SNAKE2()
+        self.fruit = FRUIT2(self.snake.body)
+        self.score = 0 
+        
+    def draw_grass(self):
+        bg = pygame.image.load('bgsnake888.png')
+        bg = pygame.transform.smoothscale(bg,(546,606))
+        screen.blit(bg, (0, 0))
+        
+    def draw_score_level(self):
+        font = pygame.font.SysFont("VERDANA", 28, bold=True)
+        font2 = pygame.font.SysFont("VERDANA", 20, bold=True)
+        score1 = font.render(f"{self.score}", True, (0, 0, 0))
+        level = font2.render("Level: 2", True, (0, 0, 0))
+        screen.blit(score1, (62, 22))
+        screen.blit(level, (435, 22))
+        
+    def draw_elements(self):
+        self.fruit.draw_fruit()
+        self.snake.draw_snake()
+        self.draw_score_level()
+
+    def check_collision(self):
+        if self.fruit.pos == self.snake.body[0]:
+            self.fruit.randomize(self.snake.body)
+            self.snake.add_block()
+            self.score += 1
+            self.eat.play()
+
+    def check_fail(self):
+        
+        if not 0 <= self.snake.body[0].x < cell_n or not 0 <= self.snake.body[0].y < cell_n:
+            self.gmovr.play() 
+            return self.game_over()
+        
+        for block in self.snake.body[1:]:
+            if block == self.snake.body[0]:
+               self.gmovr.play()
+               return self.game_over()
+        
+    def game_over(self):
+        bg = pygame.image.load('snkend2.png')
+        bg = pygame.transform.smoothscale(bg,(250,250))
+        overlay = pygame.Surface((1280, 620))  
+        overlay.set_alpha(100)
+        overlay.fill((0, 0, 0))
+        screen.blit(overlay, (0, 0))
+        screen.blit(bg, (150, 210))
+        
+        font1 = pygame.font.SysFont("VERDANA", 30, bold=True)
+        font2 = pygame.font.SysFont("VERDANA", 20)
+        text1 = font1.render("GAME OVER", True, (255, 255, 255))
+        text2 = font2.render(f"Score: {self.score}", True, (255, 255, 255))
+        screen.blit(text1, (175, 240))
+        screen.blit(text2, (227, 280))
+        
+        pygame.display.update()
+    
+        while True:
+            for e in pygame.event.get():
+                if e.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                if e.type == pygame.KEYDOWN:
+                    if e.key == pygame.K_r:  
+                        return "restart"
+                    if e.key == pygame.K_ESCAPE:  
+                     pygame.quit()
+                     sys.exit()
+    
+    def update(self):
+        self.snake.move_snake()
+        self.check_collision()
+        self.draw_grass()
+        self.draw_elements()
+        result = self.check_fail()
+        return result
+
+def scane1():
+    main_game = MAIN1() 
+    main_sounds = SOUND()
+    
+    while True:
+        for e in pygame.event.get():
+            if e.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if e.type == SCREEN_UPDATE:
+                result = main_game.update()
+                if result == "restart":
+                    return "scene1"
+            if e.type == pygame.KEYDOWN:
+                if e.key == pygame.K_UP:
+                    if main_game.snake.direction.y != 1:
+                        main_game.snake.direction = Vector2(0,-1)
+                        main_sounds.up.play()
+                if e.key == pygame.K_DOWN:
+                    if main_game.snake.direction.y != -1:
+                        main_game.snake.direction = Vector2(0,1)
+                        main_sounds.down.play()
+                if e.key == pygame.K_LEFT:
+                    if main_game.snake.direction.x != 1:
+                        main_game.snake.direction = Vector2(-1,0)
+                        main_sounds.left.play()
+                if e.key == pygame.K_RIGHT:
+                    if main_game.snake.direction.x != -1:
+                        main_game.snake.direction = Vector2(1,0)
+                        main_sounds.right.play()
+                if e.key == pygame.K_q:
+                    st = pygame.mixer.Sound('start.mp3')
+                    st.play()
+                    return "scene2"
+
+        pygame.display.update()
+        clock.tick(60)
+
+def scane2():
+    main_game = MAIN2() 
+    main_sounds = SOUND()
+  
+    while True:
+        for e in pygame.event.get():
+            if e.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            if e.type == SCREEN_UPDATE2:
+                result = main_game.update()
+                if result == "restart":
+                    return "scene2" 
+            if e.type == pygame.KEYDOWN:
+                if e.key == pygame.K_UP:
+                    if main_game.snake.direction.y != 1:
+                        main_game.snake.direction = Vector2(0,-1)
+                        main_sounds.up.play()
+                if e.key == pygame.K_DOWN:
+                    if main_game.snake.direction.y != -1:
+                        main_game.snake.direction = Vector2(0,1)
+                        main_sounds.down.play()
+                if e.key == pygame.K_LEFT:
+                    if main_game.snake.direction.x != 1:
+                        main_game.snake.direction = Vector2(-1,0)
+                        main_sounds.left.play()
+                if e.key == pygame.K_RIGHT:
+                    if main_game.snake.direction.x != -1:
+                        main_game.snake.direction = Vector2(1,0)
+                        main_sounds.right.play()
+                if e.key == pygame.K_q:
+                    st = pygame.mixer.Sound('start.mp3')
+                    st.play()
+                    return "scene1"
+    
+        pygame.display.update()
+        clock.tick(60)
+    
+
+def start():
+    bg = pygame.image.load('bgsnake777.png')
+    bg = pygame.transform.smoothscale(bg, (546, 606))
+    bgstart = pygame.image.load('fist.png')
+    bgstart = pygame.transform.smoothscale(bgstart, (160, 160))
+    st = pygame.mixer.Sound('start.mp3')
+    font = pygame.font.SysFont("VERDANA", 25)
+    text1 = font.render("Press [SPACE] to Start", True, (0, 0, 0))
+    text2 = font.render("[Q] next level", True, (0, 0, 0))
+    text3 = font.render("[R] restart", True, (0, 0, 0))
+    screen.blit(bg, (0, 0))
+    screen.blit(bgstart, (198, 212))
+    screen.blit(text1, (130, 400))
+    screen.blit(text2, (186, 440))
+    screen.blit(text3, (205, 480))
+    pygame.display.update()
+    clock.tick(20)
+
+    while True:
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    pygame.quit()
+                    sys.exit()
+                if event.key == pygame.K_SPACE:
+                    st.play()
+                    pygame.time.delay(500)
+                    return"scene1"
+
+def run_game():
+    start()
+    current_scene = "scene1"
+    while True:
+        if current_scene == "scene1":
+            current_scene = scane1()
+        elif current_scene == "scene2":
+            current_scene = scane2()
+
+run_game()
