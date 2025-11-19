@@ -1,3 +1,6 @@
+
+# (ﾉ◕ヮ◕)ﾉ*:･ﾟ✧
+
 import pygame
 
 def main():
@@ -8,12 +11,12 @@ def main():
 
     radius = 8
     color = (0, 0, 255)
-    tool = "brush"
+    tool = "qalam"
     start_pos = None
     last_pos = None
     drawing = False
 
-    font = pygame.font.SysFont(None, 24)
+    font = pygame.font.SysFont("vardana", 24)
 
     run = True
     while run:
@@ -25,11 +28,11 @@ def main():
                 if event.key == pygame.K_ESCAPE:
                     run = False
                 elif event.key == pygame.K_r:
-                    tool = "brush"; color = (255, 0, 0)
+                    tool = "qalam"; color = (255, 0, 0)
                 elif event.key == pygame.K_g:
-                    tool = "brush"; color = (0, 255, 0)
+                    tool = "qalam"; color = (0, 255, 0)
                 elif event.key == pygame.K_b:
-                    tool = "brush"; color = (0, 0, 255)
+                    tool = "qalam"; color = (0, 0, 255)
                 elif event.key == pygame.K_e:
                     tool = "eraser"
                 elif event.key == pygame.K_c:
@@ -45,7 +48,7 @@ def main():
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
-                    if tool in ("brush", "eraser"):
+                    if tool in ("qalam", "eraser"):
                         drawing = True
                         last_pos = event.pos
                     else:
@@ -66,11 +69,15 @@ def main():
                 start_pos = None
                 last_pos = None
 
-        if drawing and tool in ("brush", "eraser"):
+        if drawing and tool in ("qalam", "eraser"):
             pos = pygame.mouse.get_pos()
-            draw_color = color if tool == "brush" else (0, 0, 0)
-            if last_pos:
-                pygame.draw.line(screen, draw_color, last_pos, pos, radius * 2)
+            if tool == "qalam":
+                draw_color = color
+            else:
+                draw_color = (0, 0, 0)
+
+        if last_pos:
+            pygame.draw.circle(screen, draw_color, pos, radius)
             last_pos = pos
 
         pygame.draw.rect(screen, (50, 50, 50), (0, 0, 640, 25))
