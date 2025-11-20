@@ -6,7 +6,7 @@ def draw_menu(screen, shape, color, mouse_pos):
     if shape == "brush":
         pygame.draw.rect(screen, 'green', (268,21,38,57), 3)
     elif qalam.collidepoint(mouse_pos):
-        pygame.draw.rect(screen, 'lightgreen', (268,21,38,57), 2)
+        pygame.draw.rect(screen, 'green', (268,21,38,57), 2)
 
     shapes = [
         ("eraser", pygame.draw.rect(screen, (0,0,0), (200, 57, 15, 15), 2)),
@@ -76,11 +76,11 @@ def main():
     pygame.display.set_caption("Paint")
     clock = pygame.time.Clock()
 
-    bg = pygame.image.load('bgpaint.jpeg').convert()
+    bg = pygame.image.load('bgpaint.jpeg')
     bg = pygame.transform.smoothscale(bg, (WIDTH,HEIGHT))
-    marker = pygame.image.load('marker.jpg').convert()
+    marker = pygame.image.load('marker.jpg')
     marker = pygame.transform.smoothscale(marker, (29,30))
-    eraser_img = pygame.image.load('eraser.png').convert()
+    eraser_img = pygame.image.load('eraser.png')
     eraser_img = pygame.transform.smoothscale(eraser_img, (20,20))
 
     area_top = 120

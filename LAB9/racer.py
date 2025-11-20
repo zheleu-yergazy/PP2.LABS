@@ -40,7 +40,7 @@ def main():
     screen.fill(WHITE)
     pygame.display.set_caption("Racer")
 
-    bg = pygame.image.load('road.jpg').convert()
+    bg = pygame.image.load('road.jpg')
     bg = pygame.transform.smoothscale(bg,(WIDTH,HEIGHT))
     bgstart = pygame.image.load('bgstart.jpg')
     bgstart = pygame.transform.smoothscale(bgstart,(WIDTH,HEIGHT))
