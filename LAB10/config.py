@@ -14,7 +14,6 @@ def load_config(filename='C:\lab\LAB1\LAB10\database.ini', section='postgresql')
     
     return config
 
-# тест
 if __name__ == '__main__':
     cfg = load_config()
     print(cfg)
